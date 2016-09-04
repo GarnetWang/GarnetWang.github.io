@@ -1,0 +1,139 @@
+【【【学习ajax】】】
+一、安装服务器
+	网址：http://www.php100.com
+	把文件放到指定目录下
+	打开方式：localhost=127.0.0.1=某盘下的wamp\www 这才叫服务器环境
+
+二、AJAX
+	Asynchronous JavaScript and XML（异步JavaScript和XML)
+	【可以理解为：用javascript异步的形式去操作xml】
+
+	在不刷新页面的情况下，建议一次连接
+
+	使用XMLHttpRequest对象来创建额外的这次连接
+
+	作用：（与后端进行）数据交互
+	比原来直接用网页提取信息有更大的好处
+
+三、使用AJAX获取某一文件的内容过程详解：
+
+	1、打开浏览器 创建一个ajax对象：谁来做这个额外连接请求→XMLHttpRequest，必须有
+	var xhr=new XMLHttpRequest();	【兼容ie7及以上】
+		ie6以下new ActiveXObject('Microsoft.XMLHTTP')	是一个插件
+
+		兼容ie6：
+		第一种方式：
+		var xhr=null;
+		if(window.XMLHttpRequest){【不加window在ie6还是会报错，哪一个不存在的对象去做判断条件会报错，但是加上window表示window下的这个属性，则不会】
+			xhr=new XMLHttpRequest();
+		}else{
+			xhr=new ActiveXObject('Microsoft.XMLHTTP');	
+		}
+
+		第二种方式：
+		try{
+			//代码尝试执行这个块中的内容，如果有错误，则会执行catch{}，并且传入错误信息参数，不会中止后续代码的执行
+			//alert(a);
+			//throw new Error('wrong!!')	//js手动抛错
+			xhr=new XMLHttpRequest();
+		} catch(e){
+			//alert(e);
+			xhr=new ActiveXObject('Microsoft.XMLHTTP');
+		}
+
+	2、在地址栏输入地址：我要请求的那个页面
+	xhr.open('get','1.txt','true')
+		open方法三个参数的含义：
+			第一个：打开方式form-method get/post
+				get：通过url地址传输 post：通过浏览器内部传输
+			第二个：地址form-action 文件路径/名称/网址
+			第三个：是否异步 true（异步：非阻塞，前不影响后）/false（同步：阻塞）
+
+			注意：当你后续代码需前面的执行完成时用同步，但还是可用异步回调的形式实现
+
+	3、提交：正式请求，发送请求
+	xhr.send()	发送数据请求，相当于form的submit，上面只是准备工作
+
+	4、等待服务器返回内容：请求成功 响应数据
+	xhr.onreadystatechange=function(){
+		if(xhr.readyState==4){
+			if(xhr.status==200){
+				alert(xhr.responseText);
+			} else {
+				alert('出错了，Err：'+xhr.status);
+			}
+		}
+	}
+
+	ajax请求返回的内容被存放在responseText这个属性下：
+		responseText：返回以文本形式存放的内容
+		responseXML：返回XML形式的内容
+
+	请求状态监控：
+	onreadystatechange事件	当readyState改变的时候触发
+
+		readyState属性：请求状态
+			0：（请求未初始化）还没有调用open()方法
+			1：（载入，服务器连接已建立）已调用send()方法，正在发送请求
+			2：（载入完成，请求已接收）send()方法完成，已收到全部响应内容
+			3：（解析）正在解析响应内容
+			4：（完成）响应内容解析完成，可以在客户端调用了
+
+		status属性：服务器（请求资源）的状态，HTTP状态码
+
+	
+	表单：
+		向服务器提交数据
+		action：数据提交的地址，默认是当前页面
+
+		method：数据提交的方式，默认是get方式
+			1.get	有数据量限制（url长度限制）且每个浏览器都不同，通过url地址传输
+
+				把数据和数据值用=连接，若有多个，则把多个数据用&链接，然后把数据
+				放到url?后面传输到指定页面
+
+				传递的值为字符串类型
+
+			2.post	理论上无限（自身），在后端有限制，通过浏览器内部传输
+
+				传递的值可以是文本、二进制等
+
+		enctype：提交的数据格式，默认application/x-www-form-urlencoded
+
+		当method为post时，需要设置请求头
+			setRequestHeader("Content-type","application/x-www-form-urlencoded")
+
+
+四、后端数据的接收
+	$_GET	通过url传递给该脚本的变量的数组
+	
+	$_POST	通过HTTP POST方法（表单）传递给该脚本的变量的数组
+
+	$_REQUEST	通过get和post方式提交的都能获取，不过不常用
+
+	注意：
+		前后台键名和传输方法必须一致
+
+		数据传输方式
+		
+		数据获取方式
+
+	
+	stringify：可以把一个对象转成字符串
+
+	parse：可以把字符串转成对应对象
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
